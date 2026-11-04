@@ -7,7 +7,7 @@
 <div class="call hidden" id="call"><h2 id="callTitle">Call</h2><div class="videos"><video id="local" autoplay playsinline muted></video><video id="remote" autoplay playsinline></video></div><div class="callcontrols"><button id="mute">Mute</button><button id="camera">Camera off</button><button class="danger" id="hangup">Leave</button></div><p class="muted" id="callStatus">Connecting…</p></div>
 <script type="module">
 import {createClient} from 'https://esm.sh/@supabase/supabase-js@2';
-const CONFIG={url:'SUPABASE_URL_HERE',key:'SUPABASE_ANON_KEY_HERE'};
+const CONFIG={url:'https://wvfpebhagyllxdyubzcb.supabase.co',key:'sb_publishable_355EUOsgzZN_U6PTaOwmQQ_-0zkPCWj'};
 const $=id=>document.getElementById(id),configured=!CONFIG.url.includes('_HERE'),sb=configured?createClient(CONFIG.url,CONFIG.key):null;
 let user,room,rooms=[],subscription,callChannel,pc,stream,callId,kind='room',callMode='video';
 function note(t){alert(t)}function show(id,yes=true){$(id).classList.toggle('hidden',!yes)}
