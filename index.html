@@ -13,7 +13,7 @@ let user,room,rooms=[],subscription,callChannel,pc,stream,callId,kind='room',cal
 function note(t){alert(t)}function show(id,yes=true){$(id).classList.toggle('hidden',!yes)}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 if(!configured){$('authError').textContent='Setup needed: add Supabase URL and publishable/anon key in index.html, then run schema.sql in Supabase.'}
-const authInput=()=>{const value=$('email').value.trim();return value.includes('@')?{email:value}:{phone:value.replace(/[\\s()-]/g,'')}};
+const authInput=()=>{const value=$('email').value.trim();return value.includes('@')?{email:value}:{phone:value.replace(/[\s()-]/g,'')}};
 function validAuth(a){if(a.phone&&!/^\\+[1-9]\\d{7,14}$/.test(a.phone)){ $('authError').textContent='Use international phone format, for example +15551234567.';return false}return true}
 $('authform').onsubmit=async e=>{e.preventDefault();if(!sb)return;const a=authInput();if(!validAuth(a))return;const {error}=await sb.auth.signInWithPassword({...a,password:$('password').value});$('authError').textContent=error?.message||''};
 $('signup').onclick=async()=>{if(!sb)return;const a=authInput();if(!validAuth(a))return;const {error}=await sb.auth.signUp({...a,password:$('password').value,...(a.email?{options:{emailRedirectTo:location.origin+location.pathname}}:{})});$('authError').textContent=error?.message||(a.phone?'Account requested. Enter the SMS code to verify your number.':'Account created. Check your email if confirmation is enabled.');show('phoneVerify',Boolean(a.phone&&!error))};
@@ -32,5 +32,5 @@ function endCall(){stream?.getTracks().forEach(t=>t.stop());pc?.close();if(callC
 $('voice').onclick=()=>startCall('voice');$('video').onclick=()=>startCall('video');$('hangup').onclick=endCall;
 $('mute').onclick=()=>{const t=stream?.getAudioTracks()[0];if(t){t.enabled=!t.enabled;$('mute').textContent=t.enabled?'Mute':'Unmute'}};
 $('camera').onclick=()=>{const t=stream?.getVideoTracks()[0];if(t){t.enabled=!t.enabled;$('camera').textContent=t.enabled?'Camera off':'Camera on'}};
-if(sb){sb.auth.onAuthStateChange(async(_event,session)=>{user=session?.user;show('auth',!user);$('identity').textContent=user?.email||'Not signed in';if(user)await loadRooms();else{room=null;rooms=[];$('rooms').innerHTML='';$('messages').innerHTML='';endCall()}})}
+if(sb){sb.auth.onAuthStateChange(async(_event,session)=>{user=session?.user;show('auth',!user);$('identity').textContent=user?.email||user?.phone||'Not signed in';if(user)await loadRooms();else{room=null;rooms=[];$('rooms').innerHTML='';$('messages').innerHTML='';endCall()}})}
 </script></body></html>
